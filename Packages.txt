@@ -1,0 +1,632 @@
+Expt 1
+//NON OVERLAPPING 
+
+
+ORG 0000H 
+MOV R2,#0AH;
+MOV R0,#20H
+MOV R1,#40H;
+L1: MOV A,@R0;
+MOV @R1,A;
+INC R0;
+INC R1;
+DJNZ R2,L1;
+END
+
+
+
+
+
+
+
+
+
+
+
+//OVERLAPPING
+
+ORG 0000H 
+MOV R2,#0AH;
+MOV R0,#29H
+MOV R1,#2EH;
+L1: MOV A,@R0;
+MOV @R1,A;
+DEC R0;
+DEC R1;
+DJNZ R2,L1;
+END;
+
+
+
+
+
+
+
+Expt 2
+//Toggle LED
+
+#include<reg51.h>
+void Delay(unsigned int itime)
+{	
+	unsigned int i,j;
+	for(i=0;i<itime;i++);
+	{
+		for(j=0;j<1275;j++);
+	}
+}
+void main(void)
+{
+	unsigned int z;
+	for(z=0;z<=255;z++)
+	{
+		P1=z;
+		Delay(1000);
+	}
+}
+
+
+
+//LED HEX 
+
+#include<reg51.h>
+void Delay(unsigned int itime)
+{	
+	unsigned int i,j;
+	for(i=0;i<itime;i++);
+	{
+		for(j=0;j<1275;j++);
+	}
+}
+void main(void)
+{
+	unsigned int z;
+	for(z=0;z<=0xFF;z++)
+	{
+		P1=z;
+		Delay(40000);
+	}
+}
+
+
+
+
+//LED BCD 
+
+
+
+#include<reg51.h>
+void Delay(unsigned int itime)
+{	
+	unsigned int i,j;
+	for(i=0;i<itime;i++)
+	{
+		for(j=0;j<1275;j++);
+	}
+}
+void main(void)
+{
+	int s,z;
+	for(s=0;s<=9;s++)
+	{
+		for(z=0;z<=9;z++);
+	}
+	P1=(s<<4)|z;
+	Delay(20000);
+}
+
+
+
+//LED ASCII
+
+#include<reg51.h>
+void Delay(unsigned int itime)
+{	
+	unsigned int i,j;
+	for(i=0;i<itime;i++)
+	{
+		for(j=0;j<1275;j++);
+	}
+}
+void main(void)
+{
+	int z;
+	for(z='A';z<+'Z';z++)
+	{
+	P1=z;
+	Delay(20000);
+	}
+}
+
+
+
+Expt 3
+//Square
+
+#include<reg51.h>
+void Delay(unsigned int itime)
+{	
+	unsigned int i,j;
+	for(i=0;i<itime;i++)
+	{
+		for(j=0;j<1275;j++);
+	}
+}
+void main(void)
+{
+while(1)
+	{	
+	P1=0x00;
+	Delay(15000);
+	P1=0XFF;
+	Delay(15000);
+	}
+}
+
+
+
+//Triangle
+
+
+#include<reg51.h>
+void main(void)
+{
+	int z;
+	while(1)
+{	
+	for(z=0;z<255;z++)
+	{
+		P1=z;
+	}
+	for(z=255;z>=0;z--)
+	{
+		P1=z;
+	}
+}
+}
+
+
+
+
+
+
+//Sine
+
+
+#include<reg51.h>
+void main(void)
+{
+unsigned char sin_value[12]={128,192,238,255,238,192,128,64,17,0,17,64};
+unsigned char i;
+while(1)
+{
+for(i=0;i<12;i++)
+	{
+	P1=sin_value[i];
+	}
+}
+}
+
+
+
+
+Expt 4
+//Clockwise
+
+#include<reg51.h>
+void Delay(unsigned int a)
+{
+	unsigned int i,j;
+	for (i=0;i<=a;i++)
+	{
+		for(j=0;j<1275;j++);
+	}
+}
+void main(void)
+{
+	while(1)
+	{
+		P1=0X06;
+		Delay(250);
+		P1=0X0c;
+		Delay(250);
+		P1=0X09;
+		Delay(250);
+		P1=0X03;
+		Delay(250);
+	}
+}
+
+
+
+//Anticlockwise
+
+
+#include<reg51.h>
+void Delay(unsigned int a)
+{
+	unsigned int i,j;
+	for (i=0;i<=a;i++)
+	{
+		for(j=0;j<1275;j++);
+	}
+}
+void main(void)
+{
+	while(1)
+	{
+		P1=0X03;
+		Delay(250);
+		P1=0X09;
+		Delay(250);
+		P1=0X0C;
+		Delay(250);
+		P1=0X06;
+		Delay(250);
+	}
+}
+
+
+
+
+Expt 5
+#include <p18f4550.h>
+#include "vector_relocate.h"
+
+void msdelay(unsigned int time){
+	unsigned int i,j;
+	for(i=0;i<time;i++);
+	for(j=0;j<710;j++);
+}
+
+void main(void){
+	unsigned int i;
+	unsigned char val = 0;
+	
+	INTCON2bits.RBPU = 0;
+	ADCON1 = 0X0F;
+	
+	TRISD = 0X00;
+	TRISBbits.TRISB0 = 1;
+	TRISBbits.TRISB1 = 1;
+	
+	TRISCbits.TRISC1 = 0;
+	TRISCbits.TRISC2 = 0;
+	
+	PORTCbits.RC1 = 0;
+	PORTCbits.RC2 = 0;
+	
+	while(1){
+		if(PORTBbits.RB0 == 0){
+			val = 1;
+		}
+		if(PORTBbits.RB1 == 0){
+			val = 2;
+		}
+		
+		if(val == 1){
+			PORTCbits.RC1 = 1;
+			PORTCbits.RC2 = 1;
+			PORTD = 0X80;
+			
+			msdelay(100);
+			
+			for(i=0; i<8; i++){
+				PORTD = PORTD>>1;
+				msdelay(100);
+			}
+		}
+		
+		if(val == 2){
+			PORTCbits.RC1 = 0;
+			PORTCbits.RC2 = 0;
+			PORTD = 0X01;
+			
+			msdelay(100);
+			
+			for(i=0;i<8;i++){
+				PORTD = PORTD<<1;
+				msdelay(100);
+			}
+		}
+	}
+}
+
+
+
+Expt 6
+#include <p18f4550.h>
+extern void _startup (void);
+#pragma code RESET_INTERRUPT_VECTOR = 0x1000
+void _reset (void)
+{
+_asm 
+		goto _startup 
+	_endasm
+}
+#pragma code
+#pragma code LOW_INTERRUPT_VECTOR = 0x1018
+ void low_ISR (void)
+{
+}
+#pragma code
+##pragma code HIGH_INTERRUPT_VECTOR = 0x1008
+void high_ISR (void)
+{
+	_asm 
+		goto timer_isr
+	_endasm    
+}
+#pragma code
+///Timer ISR Function Prototype//
+void timer_isr(void);
+#pragma interrupt timer_isr
+void timer_isr(void)
+{
+   TMR0H = 0X6D;  
+TMR0L = 0X82;
+PORTBbits.RB0 = ~PORTBbits.RB0; 
+ INTCONbits.TMR0IF = 0; 
+}
+void main()
+{	
+ADCON1 = 0x0F; 
+INTCON2bits.RBPU=0        
+TRISBbits.TRISB0 = 0; 
+PORTBbits.RB0 = 0;    	
+          T0CON = 0x03;		  
+ TMR0H = 0x6D;         
+TMR0L = 0x82;
+INTCONbits.TMR0IF = 0; 
+INTCONbits.TMR0IE = 1;
+INTCONbits.GIE = 1;	
+T0CONbits.TMR0ON = 1; 
+ while(1);             
+}
+
+
+
+
+
+Expt 7
+#include <p18f4550.h>
+#include "vector_relocate.h"
+
+#define L_DATA    PORTD
+#define ctrl        PORTE
+#define rs          PORTEbits.RE0
+#define rw          PORTEbits.RE1
+#define en          PORTEbits.RE2
+
+void init_LCD(void);
+void LCD_cmd(unsigned char cmd);
+void LCD_data(unsigned char data);
+void LCD_write(const char *str);
+void delay(unsigned int time);
+
+void main()  
+{
+    char var1[] = "Microcontroller";  
+    char var2[] = "Embedded Lab";
+    INTCON2bits.RBPU = 0;
+    ADCON1 = 0x0F; 
+    TRISD = 0x00;
+    TRISE = 0x00;
+
+
+    init_LCD();
+    msdelay(15);
+    LCD_write_string(var1);
+    msdelay(15);
+    LCD_command(0xC0);
+    LCD_write_string(var2);
+    while(1);
+}
+  
+void init_LCD(void)
+{
+    LCD_command(0x38);
+    msdelay(15);
+    LCD_command(0x01);
+    msdelay(15);
+    LCD_command(0x0E);
+    msdelay(15);
+    LCD_command(0x80);
+    msdelay(15);
+}
+
+
+
+
+
+
+
+
+
+
+
+void LCD_command(unsigned char cmd)
+{
+    LCD_DATA = cmd;
+    rs = 0; 
+    rw = 0;
+    en = 1; 
+    msdelay(15);
+    en = 0;
+} 
+
+void LCD_data(unsigned char data) 
+{
+    LCD_DATA = data;
+    rs = 1;
+    rw = 0; 
+    en = 1; 
+    msdelay(15);
+    en = 0;
+}
+
+void LCD_write_string(const char *str)   
+{
+    int i = 0;
+    while (str[i] != '\0')
+    {
+        LCD_data((unsigned char)str[i]);
+        msdelay(15);
+        i++;
+    }
+}
+
+void msdelay(unsigned int time)
+{
+    unsigned int i, j;
+    for(i = 0; i < time; i++)
+        for(j = 0; j < 1000; j++);  // Adjust this loop for the desired delay
+}
+
+
+
+
+
+
+
+Expt 8
+
+#include <p18f4550.h>
+#include “vector_relocate.h”
+void myMsDelay (unsigned int time);
+void main(){ 
+	TRISCbits.TRISC2 = 0 ; 
+	TRISD=0; 
+	PR2 = 0XBA; 
+	CCP1CON = 0x0C; 
+	T2CON = 0x07; 
+	PORTDbits.RD5 = 1 ;
+	PORTDbits.RD6 = 0 ;
+	While (1){  
+		// For 20% Duty cycle
+		CCPR1L = 0x25; CCP1CONbits.DC1B0=0; CCP1CONbits.DC1B1=1; myMsDelay(3000); 
+		//For 40% Duty cycle
+		CCPR1L = 0X4B; CCP1CONbits.DC1B0=0; CCP1CONbits.DC1B1=0; myMsDelay(3000); 
+		// For 60% Duty cycle
+		CCPR1L = 0X74; CCP1CONbits.DC1B0=0; CCP1CONbits.DC1B1=1; myMsDelay(3000); 
+		// For 80% Duty cycle
+		CCPR1L = 0x96; CCP1CONbits.DC1B0=0; CCP1CONbits.DC1B1=0; myMsDelay(3000);
+ 	 }   
+} 
+void myMSDelay(unsigned int time)
+ { 
+unsigned int i, j;
+ for (i = 0; i < time; i++)
+ for (j = 0; j <665; j++); 
+}
+
+
+
+
+
+
+
+Expt 9
+#include <p18f4550.h>
+#include "vector_relocate.h"
+#define L_DATA    PORTD
+#define ctrl        PORTE
+#define rs          PORTEbits.RE0
+#define rw          PORTEbits.RE1
+#define en          PORTEbits.RE2
+
+void init_LCD(void);
+void LCD_cmd(unsigned char cmd);
+void LCD_data(unsigned char data);
+void LCD_write(const char *str);
+void delay(unsigned int time);
+
+void main(void)
+{
+ unsigned int val[4],ADC_Result=0,var;
+unsigned char i,str[]="Result:";
+
+ 
+ TRISD = 0x00;         
+
+TRISE=0;
+TRISA=0xFF;
+init_LCD();
+// ADC Initialization
+ ADCON1=0x0A;	
+ ADCON2=0b10010110;  
+ ADCON0=0X09; 
+ 
+LCD_cmd(0x80);
+for(i=0;str[i]!='\0';i++)
+{
+LCD_write(str[i]);
+myMsDelay(200);
+}
+ while(1)
+ {
+  ADCON0bits.GO=1;
+  while(ADCON0bits.GO==1);
+ var=((unsigned int)ADRESH) << 8;
+  ADC_Result=var+ADRESL;
+
+for(i=0;i<4;i++)
+{
+val[i]=ADC_Result%0x0A;
+val[i]=val[i]+0x30;
+ADC_Result=ADC_Result/0x0A;
+}
+
+LCD_cmd(0x87);
+LCD_write(val[3]);
+LCD_write(val[2]);
+LCD_write(val[1]);
+LCD_write(val[0]);
+}
+}
+  
+void init_LCD(void)
+{
+    LCD_command(0x38);
+    msdelay(15);
+    LCD_command(0x01);
+    msdelay(15);
+    LCD_command(0x0E);
+    msdelay(15);
+    LCD_command(0x80);
+    msdelay(15);
+}
+void LCD_command(unsigned char cmd)
+{
+    LCD_DATA = cmd;
+    rs = 0; 
+    rw = 0;
+    en = 1; 
+    msdelay(15);
+    en = 0;
+} 
+
+void LCD_data(unsigned char data) 
+{
+    LCD_DATA = data;
+    rs = 1;
+    rw = 0; 
+    en = 1; 
+    msdelay(15);
+    en = 0;
+}
+
+void LCD_write_string(const char *str)   
+{
+    int i = 0;
+    while (str[i] != '\0')
+    {
+        LCD_data((unsigned char)str[i]);
+        msdelay(15);
+        i++;
+    }
+}
+void msdelay(unsigned int time)
+{
+    unsigned int i, j;
+    for(i = 0; i < time; i++)
+        for(j = 0; j < 1000; j++);  }
